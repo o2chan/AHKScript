@@ -1,8 +1,10 @@
 AHKScript
 =========
 
-Autohotkey.ahk: General Hotkey Settings
+My AHK Script
 
-TotalVC.ahk: Add Vim-like Feature to Total Commander
+*Autohotkey.ahk: General Hotkey Settings
 
-EasyFinder.ahk: Select Files by 3rd Party File Explorer in Open/Save as Dialogs
+*TotalVC.ahk: Add Vim-like Feature to Total Commander
+
+*EasyFinder.ahk: Select Files by 3rd Party File Explorer in Open/Save as Dialogs
