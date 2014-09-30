@@ -30,9 +30,10 @@ If (TEMPFILENAME = FILEDIR) {
 	FILENAME := ""
 }
 Send #1
-Sleep 300
-Send !d
+Sleep, 300
 Clipboard = %FILEDIR%
+Send !d
+Sleep, 200
 Send ^a^v{Enter}
 ControlFocus, DirectUIHWND3, A
 Sleep, 100
