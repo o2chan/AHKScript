@@ -25,17 +25,17 @@ ControlGetFocus, FOCUSOBJ, ahk_class TTOTAL_CMD
 Send ^a^c
 Sleep, 50
 FILENAME = %Clipboard%
-StringTrimRight TEMPFILENAME, FILENAME, 1
-If (TEMPFILENAME = FILEDIR) {
+StringRight TEMPFILENAME, FILENAME, 1
+If (TEMPFILENAME = "\") {
 	FILENAME := ""
 }
-Send #1
-Sleep, 300
-Clipboard = %FILEDIR%
+Send #e
+Sleep 800
 Send !d
-Sleep, 200
+Clipboard = %FILEDIR%
+Sleep 100
 Send ^a^v{Enter}
 ControlFocus, DirectUIHWND3, A
-Sleep, 100
+Sleep, 200
 Send %FILENAME%
 return

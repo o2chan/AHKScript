@@ -1,4 +1,4 @@
-MODE = 0
+MODE = 1
 SINGLEWIN = 0
 SHOWSELECT = 0
 ALLSELECT = 0
@@ -72,6 +72,29 @@ F12::PostMessage, 1075, 2902
 q::Send ^+{Tab}					;Select Previous Tab
 w::PostMessage, 1075, 4001		;Activate Left Window
 e::PostMessage, 1075, 4002		;Activate Right Window
+!e::
+PostMessage, 1075, 2029
+Sleep, 100
+FILEDIR = %Clipboard%
+PostMessage, 1075, 1002
+ControlGetFocus, FOCUSOBJ, ahk_class TTOTAL_CMD
+Send ^a^c
+Sleep, 50
+FILENAME = %Clipboard%
+StringRight TEMPFILENAME, FILENAME, 1
+If (TEMPFILENAME = "\") {
+	FILENAME := ""
+}
+Send #e
+Sleep 800
+Send !d
+Clipboard = %FILEDIR%
+Sleep 100
+Send ^a^v{Enter}
+ControlFocus, DirectUIHWND3, A
+Sleep, 200
+Send %FILENAME%
+return
 r::Send ^{Tab}					;Select Next Tab
 t::PostMessage, 1075, 529		;Restore Selection
 +t::PostMessage, 1075, 530		;Save Selection
@@ -89,11 +112,11 @@ g::Send ^z						;Edit Comment
 z::Send !{F6}					;Unzip File
 +z::Send !{F5}					;Zip File
 !z::							;Unzip File in Current Window
-UNZIPTEMP = %clipboard%
+UNZIPTEMP = %Clipboard%
 PostMessage, 1075, 2029
 Send !{F6}
-Send %clipboard%!s
-clipboard = %UNZIPTEMP%
+Send %Clipboard%!s
+Clipboard = %UNZIPTEMP%
 return
 x::Send {Del}					;Delete
 +x::Send +{Del}					;Delete Permanently
@@ -121,8 +144,7 @@ l::Right						;Emulate Right Key
 +l::Send {Tab}!{Right}{Tab}		;Destination to Next Directory
 #l::return
 `;::PostMessage, 1075, 532		;Target = Source
-;n::Send {F5}					;Copy File
-n::PostMessage, 1075, 905
+n::Send {F5}					;Copy File
 +n::Send +{F5}					;Copy File to Current Window
 m::Send {F6}					;Move File
 +m::Send ^+{F5};				;Create Shortcut
@@ -136,18 +158,18 @@ return
 `::								;Toggle Comment View
 if setSwitch(COMMENTVIEW) {
 	if (focusList() = 2) {
-		COMMENTTEMP = %clipboard%
+		COMMENTTEMP = %Clipboard%
 		PostMessage, 1075, 2017
 		Sleep, 200
-		ifInString, clipboard, \
+		ifInString, Clipboard, \
 		{
-			StringTrimRight, clipboard, clipboard, 1
+			StringTrimRight, Clipboard, Clipboard, 1
 		}
 		Send ^+u
 		PostMessage, 1075, 4001
 		Send ^+{F2}
-		Send %clipboard%{Esc}{Esc}
-		clipboard = %COMMENTTEMP%
+		Send %Clipboard%{Esc}{Esc}
+		Clipboard = %COMMENTTEMP%
 		COMMENTRIGHT = 1		
 	} else {
 		Send ^+{F2}
@@ -157,17 +179,17 @@ if setSwitch(COMMENTVIEW) {
 	PostMessage, 1075, 909
 	Send ^+{F2}
 	if (COMMENTRIGHT) {
-		COMMENTTEMP = %clipboard%
+		COMMENTTEMP = %Clipboard%
 		PostMessage, 1075, 2017
 		Sleep, 200
-		ifInString, clipboard, \
+		ifInString, Clipboard, \
 		{
-			StringTrimRight, clipboard, clipboard, 1
+			StringTrimRight, Clipboard, Clipboard, 1
 		}
 		Send ^+u
 		PostMessage, 1075, 4002
-		Send %clipboard%{Esc}{Esc}
-		clipboard = %COMMENTTEMP%
+		Send %Clipboard%{Esc}{Esc}
+		Clipboard = %COMMENTTEMP%
 		COMMENTRIGHT = 0
 	}
 }
@@ -203,3 +225,19 @@ l::Right
 m::BS
 n::Space
 d::Send {Esc}
+
+
+#If (WinActive("ahk_class CabinetWClass") and (WinExist("ahk_class TTOTAL_CMD")))
+!e::
+Send !d
+ControlGetText, FILEDIR, Edit1, ahk_class CabinetWClass
+Clipboard = %FILEDIR%
+WinActivate, ahk_class TTOTAL_CMD
+PostMessage, 1075, 2912
+Send ^a^v
+Sleep, 100
+if (WinExist("ahk_class Auto-Suggest Dropdown")) {
+	Send {Enter}
+}
+Send {Enter}
+return
