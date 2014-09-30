@@ -1,4 +1,4 @@
-MODE = 0
+MODE = 1
 SINGLEWIN = 0
 SHOWSELECT = 0
 ALLSELECT = 0
@@ -81,18 +81,17 @@ ControlGetFocus, FOCUSOBJ, ahk_class TTOTAL_CMD
 Send ^a^c
 Sleep, 50
 FILENAME = %Clipboard%
-StringTrimRight TEMPFILENAME, FILENAME, 1
-If (TEMPFILENAME = FILEDIR) {
+StringRight TEMPFILENAME, FILENAME, 1
+If (TEMPFILENAME = "\") {
 	FILENAME := ""
 }
 Send #1
-Sleep, 300
-Clipboard = %FILEDIR%
+Sleep 300
 Send !d
-Sleep, 200
+Clipboard = %FILEDIR%
 Send ^a^v{Enter}
 ControlFocus, DirectUIHWND3, A
-Sleep, 100
+Sleep, 200
 Send %FILENAME%
 return
 r::Send ^{Tab}					;Select Next Tab
@@ -112,11 +111,11 @@ g::Send ^z						;Edit Comment
 z::Send !{F6}					;Unzip File
 +z::Send !{F5}					;Zip File
 !z::							;Unzip File in Current Window
-UNZIPTEMP = %clipboard%
+UNZIPTEMP = %Clipboard%
 PostMessage, 1075, 2029
 Send !{F6}
-Send %clipboard%!s
-clipboard = %UNZIPTEMP%
+Send %Clipboard%!s
+Clipboard = %UNZIPTEMP%
 return
 x::Send {Del}					;Delete
 +x::Send +{Del}					;Delete Permanently
@@ -144,8 +143,7 @@ l::Right						;Emulate Right Key
 +l::Send {Tab}!{Right}{Tab}		;Destination to Next Directory
 #l::return
 `;::PostMessage, 1075, 532		;Target = Source
-;n::Send {F5}					;Copy File
-n::PostMessage, 1075, 905
+n::Send {F5}					;Copy File
 +n::Send +{F5}					;Copy File to Current Window
 m::Send {F6}					;Move File
 +m::Send ^+{F5};				;Create Shortcut
@@ -159,18 +157,18 @@ return
 `::								;Toggle Comment View
 if setSwitch(COMMENTVIEW) {
 	if (focusList() = 2) {
-		COMMENTTEMP = %clipboard%
+		COMMENTTEMP = %Clipboard%
 		PostMessage, 1075, 2017
 		Sleep, 200
-		ifInString, clipboard, \
+		ifInString, Clipboard, \
 		{
-			StringTrimRight, clipboard, clipboard, 1
+			StringTrimRight, Clipboard, Clipboard, 1
 		}
 		Send ^+u
 		PostMessage, 1075, 4001
 		Send ^+{F2}
-		Send %clipboard%{Esc}{Esc}
-		clipboard = %COMMENTTEMP%
+		Send %Clipboard%{Esc}{Esc}
+		Clipboard = %COMMENTTEMP%
 		COMMENTRIGHT = 1		
 	} else {
 		Send ^+{F2}
@@ -180,17 +178,17 @@ if setSwitch(COMMENTVIEW) {
 	PostMessage, 1075, 909
 	Send ^+{F2}
 	if (COMMENTRIGHT) {
-		COMMENTTEMP = %clipboard%
+		COMMENTTEMP = %Clipboard%
 		PostMessage, 1075, 2017
 		Sleep, 200
-		ifInString, clipboard, \
+		ifInString, Clipboard, \
 		{
-			StringTrimRight, clipboard, clipboard, 1
+			StringTrimRight, Clipboard, Clipboard, 1
 		}
 		Send ^+u
 		PostMessage, 1075, 4002
-		Send %clipboard%{Esc}{Esc}
-		clipboard = %COMMENTTEMP%
+		Send %Clipboard%{Esc}{Esc}
+		Clipboard = %COMMENTTEMP%
 		COMMENTRIGHT = 0
 	}
 }
@@ -242,4 +240,3 @@ if (WinExist("ahk_class Auto-Suggest Dropdown")) {
 }
 Send {Enter}
 return
-
