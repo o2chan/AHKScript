@@ -85,10 +85,11 @@ StringRight TEMPFILENAME, FILENAME, 1
 If (TEMPFILENAME = "\") {
 	FILENAME := ""
 }
-Send #1
-Sleep 300
+Send #e
+Sleep 800
 Send !d
 Clipboard = %FILEDIR%
+Sleep 100
 Send ^a^v{Enter}
 ControlFocus, DirectUIHWND3, A
 Sleep, 200
