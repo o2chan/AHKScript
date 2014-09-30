@@ -72,6 +72,28 @@ F12::PostMessage, 1075, 2902
 q::Send ^+{Tab}					;Select Previous Tab
 w::PostMessage, 1075, 4001		;Activate Left Window
 e::PostMessage, 1075, 4002		;Activate Right Window
+!e::
+PostMessage, 1075, 2029
+Sleep, 100
+FILEDIR = %Clipboard%
+PostMessage, 1075, 1002
+ControlGetFocus, FOCUSOBJ, ahk_class TTOTAL_CMD
+Send ^a^c
+Sleep, 50
+FILENAME = %Clipboard%
+StringTrimRight TEMPFILENAME, FILENAME, 1
+If (TEMPFILENAME = FILEDIR) {
+	FILENAME := ""
+}
+Send #1
+Sleep 300
+Send !d
+Clipboard = %FILEDIR%
+Send ^a^v{Enter}
+ControlFocus, DirectUIHWND3, A
+Sleep, 100
+Send %FILENAME%
+return
 r::Send ^{Tab}					;Select Next Tab
 t::PostMessage, 1075, 529		;Restore Selection
 +t::PostMessage, 1075, 530		;Save Selection
@@ -203,3 +225,20 @@ l::Right
 m::BS
 n::Space
 d::Send {Esc}
+
+
+#If (WinActive("ahk_class CabinetWClass") and (WinExist("ahk_class TTOTAL_CMD")))
+!e::
+Send !d
+ControlGetText, FILEDIR, Edit1, ahk_class CabinetWClass
+Clipboard = %FILEDIR%
+WinActivate, ahk_class TTOTAL_CMD
+PostMessage, 1075, 2912
+Send ^a^v
+Sleep, 100
+if (WinExist("ahk_class Auto-Suggest Dropdown")) {
+	Send {Enter}
+}
+Send {Enter}
+return
+
